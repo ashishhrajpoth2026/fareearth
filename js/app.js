@@ -3,16 +3,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getBasePath() {
-    const path = window.location.pathname;
+    const path = window.location.pathname || '/';
     const parts = path.split('/').filter(Boolean);
 
-    // Detect GitHub Pages subpath like /fareearth/
-    // If first path segment is not an HTML file, it's likely a subpath
-    if (parts.length > 0 && !parts[0].includes('.html') && !parts[0].includes('.')) {
+    // Detect a GitHub Pages-style subpath like /fareearth/.
+    // Only treat the first segment as a subpath when the URL has more than one segment,
+    // which avoids misreading a single page route such as /admin-login/ as the site root.
+    if (parts.length > 1 && !parts[0].includes('.html') && !parts[0].includes('.')) {
         return '/' + parts[0] + '/';
     }
 
-    // Running locally (file:// or no subpath)
+    // Running locally or on a single-page route like /admin-login/
     return '/';
 }
 
